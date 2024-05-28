@@ -3,6 +3,7 @@ from random import choice, randint
 
 from django.http import HttpResponse, HttpRequest, JsonResponse, Http404
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from .models import books, categories_data
 
@@ -15,8 +16,13 @@ def get_object_or_404(all_books: list, id_: int) -> dict:
     raise Http404
 
 
+@login_required()
 def index(request: HttpRequest) -> HttpResponse:
-    return HttpResponse(f"<h1>Добро пожаловать в библиотеку!!!</h1>")
+    template_name = "index.html"
+    context = {
+        "books_list": BOOKS,
+    }
+    return render(request, template_name, context)
 
 
 def about_handler(request):
